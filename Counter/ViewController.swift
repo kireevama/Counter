@@ -9,29 +9,53 @@ import UIKit
 
 class ViewController: UIViewController {
 
-    @IBOutlet weak var plusButton: UIButton!
-    @IBOutlet weak var minusButton: UIButton!
-    @IBOutlet weak var cleanButton: UIButton!
-    @IBOutlet weak var counterLabel: UILabel!
-    @IBOutlet weak var changeHistoryTextView: UITextView!
+    // MARK: - IBOutlet
+    @IBOutlet weak private var plusButton: UIButton!
+    @IBOutlet weak private var minusButton: UIButton!
+    @IBOutlet weak private var cleanButton: UIButton!
+    @IBOutlet weak private var counterLabel: UILabel!
+    @IBOutlet weak private var changeHistoryTextView: UITextView!
     
-    var counter = 0
-    var messages = ["История изменений:"]
+    // MARK: - Private Properties
+    private var counter = 0
+    private var messages = ["История изменений:"]
     
+    // MARK: - Public methods
     override func viewDidLoad() {
         super.viewDidLoad()
         changeHistoryTextView.isScrollEnabled = true
-        changeHistoryTextView.scrollRectToVisible(<#T##rect: CGRect##CGRect#>, animated: true)
-        // Do any additional setup after loading the view.
     }
 
-    @IBAction func plusButtonDidTap(_ sender: Any) {
+    // MARK: - Private Methods
+    private func displayScore() {
+        counterLabel.text = String(counter)
+    }
+    
+    private func displayChangeHistory(message: String) {
+        let dayAndTime = getDayAndTime()
+        let stringOfMessage = "\(dayAndTime) \(message)"
+        messages.append(stringOfMessage)
+        
+        changeHistoryTextView.text = messages.joined(separator: "\n")
+    }
+
+    private func getDayAndTime() -> String {
+        let dayAndTime = Date()
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy HH.mm"
+        
+        let dayAndTimeToString = dateFormatter.string(from: dayAndTime)
+        return dayAndTimeToString
+    }
+    
+    @IBAction private func plusButtonDidTap(_ sender: Any) {
         counter += 1
         displayScore()
         displayChangeHistory(message: "значение изменено на +1")
     }
     
-    @IBAction func minusButtonDidTap(_ sender: Any) {
+    // MARK: - IBAction
+    @IBAction private func minusButtonDidTap(_ sender: Any) {
         if counter > 0 {
             counter -= 1
             displayScore()
@@ -41,31 +65,10 @@ class ViewController: UIViewController {
         }
     }
     
-    @IBAction func cleanButtonDidTap(_ sender: Any) {
+    @IBAction private func cleanButtonDidTap(_ sender: Any) {
         counter = 0
         displayScore()
         displayChangeHistory(message: "значение сброшено")
-    }
-    
-    func displayScore() {
-        counterLabel.text = String(counter)
-    }
-    
-    func displayChangeHistory(message: String) {
-        let dayAndTime = getDayAndTime()
-        let stringOfMessage = "\(dayAndTime) \(message)"
-        messages.append(stringOfMessage)
-        
-        changeHistoryTextView.text = messages.joined(separator: "\n")
-    }
-
-    func getDayAndTime() -> String {
-        let dayAndTime = Date()
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy HH.mm"
-        
-        let dayAndTimeToString = dateFormatter.string(from: dayAndTime)
-        return dayAndTimeToString
     }
     
 }
